@@ -1,25 +1,22 @@
-import logo from './logo.svg';
+import React, { Component } from 'react';
+//React是default export。所以可以直接import， {Component}不是default export，所以要加{}
+//假如一个module中有多个class，必须有一个是default export
 import './App.css';
+import TodoApp from './components/todo/TodoApp';
+import './bootstrap.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+
+class App extends Component {
+  render() {
+    return (
+      <div className="App"> 
+      <TodoApp/> 
+      </div>
+    );
+  }
 }
+
+
 
 export default App;
