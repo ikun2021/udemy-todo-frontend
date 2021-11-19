@@ -8,7 +8,8 @@ class AuthenticationService {
         })
 
     }
-
+    
+    //sessionStorage在浏览器的application-local storage里面
     registerWithToken(username,token){
         let jwtToken = 'Bearer '+ token;
         sessionStorage.setItem("Username",username);
@@ -21,7 +22,7 @@ class AuthenticationService {
 
     isLoggedIn(){
         let name = sessionStorage.getItem("Username")
-        if(name===null) return false
+        // if(name===null) return false
         return true
     }
 

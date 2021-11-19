@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {BrowserRouter as Router,Route,Switch} from 'react-router-dom';
+import {BrowserRouter as Router,Route,Routes} from 'react-router-dom';
 import AuthenticatedRoute from './AuthenticatedRoute.jsx';
 import LoginComponent from './LoginComponent.jsx';
 import HeaderComponent from './HeaderComponent.jsx';
@@ -18,15 +18,27 @@ export default class TodoApp extends Component{
             <div className="TodoApp">
                 <Router>
                 <HeaderComponent/>
-                    <Switch>
-                    <Route path="/" exact component={LoginComponent}/>
-                    <Route path="/logout" exact component={LogoutComponent}/>
-                    <Route path="/login" component={LoginComponent}/>
-                    <AuthenticatedRoute path="/welcome/:name" component={WelcomeComponent}/>
-                    <AuthenticatedRoute path="/list" component={ListComponent}/>
-                    <AuthenticatedRoute path="/todos/:id" component={TodoComponent}/>
-                    <Route  component={ErrorComponent}/>
-                    </Switch>   
+                    <Routes>
+                    <Route path="/"  element={<LoginComponent/>}/>
+                    <Route path="/logout"  element={<LogoutComponent/>}/>
+                    <Route path="/login" element={<LoginComponent/>}/>
+                    <Route path="/list" element={
+                        <AuthenticatedRoute>
+                            <ListComponent/>
+                        </AuthenticatedRoute>
+                    }/> 
+                    <Route path="/welcome/:name" element={
+                        <AuthenticatedRoute>
+                             <WelcomeComponent/>
+                        </AuthenticatedRoute>
+                    }/> 
+                    <Route path="/todos/:id" element={
+                        <AuthenticatedRoute>
+                            <TodoComponent/>
+                        </AuthenticatedRoute>
+                    }/>
+                    <Route path="*" element={<ErrorComponent/>}/>
+                    </Routes>  
                 <FooterComponent/>      
                 </Router>
             </div>

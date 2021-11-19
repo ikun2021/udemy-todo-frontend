@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import TodoDataSerive from '../../api/todo/TodoDataService.js'   
 import moment from 'moment';
+
+//we can pass method of parent component to child component as props  
 class ListComponent extends Component{
     //constructor render componentDIdMount（lifecycle method）的执行顺序
     constructor(props){
@@ -72,7 +74,6 @@ class ListComponent extends Component{
                 </tr>
                 {this.state.list.map(
                     todo =>
-                        
                         <tr key={todo.id}>
                             <td>{todo.id}</td>
                             <td>{todo.description}</td>  
@@ -89,5 +90,11 @@ class ListComponent extends Component{
         )
     }
 }
+//可以在class外define default props，还可以作props的type check
+//ListComponent.defaultProps = {by:1};
+//ListComponent.propTypes={
+//     by:propTypes.number
+// }
 
 export default ListComponent
+
