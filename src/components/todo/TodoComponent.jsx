@@ -2,33 +2,24 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import { Form,Formik,Field, ErrorMessage } from 'formik';
 import TodoDataSerive from '../../api/todo/TodoDataService.js'
+import { useParams,useNavigate } from 'react-router';
 
 //用formik创建form--因为react创建form比较复杂
 //用moment library 去format Date
 class TodoComponent extends Component{
+    
     constructor(props){
         super(props)
         this.state={
-            id:this.props.match.params.id,//传过来的id
             description:'',
-            targetDate:'',
+            targetDate:moment(new Date()).format('YYYY-MM-DD'),
             isDone:false
         }
         this.onSubmit=this.onSubmit.bind(this)
     }
+    
 
-    onSubmit(values){
-        TodoDataSerive.updateTodo(this.state.id,{
-            id:this.state.id,
-            username:'admin',
-            description:values.description,
-            targetDate:values.targetDate,
-            isDone:values.isDone
-        })
-        .then(()=>this.props.history.push("/list"))//重新回到list页面
-
-    }
-
+    //先validate 后submit
     validate(values){
         let errors={}
         if(!values.description){
@@ -36,14 +27,49 @@ class TodoComponent extends Component{
         }else if(values.description.length<5){
             errors.description='description should more than 5 characters'
         }
+        if(!moment(values.targetDate).isValid()){
+            errors.targetDate='enter a valid date'
+        }
         return errors
     }
 
+    onSubmit(values){
+        const params = this.props.myUseParams
+        const myId = params.id
+        const navigate = this.props.myNavigate
+        let name = sessionStorage.getItem("Username")
+        if(myId===-1){
+            TodoDataSerive.createTodo(name,{
+                description:values.description,
+                targetDate:values.targetDate,
+                isDone:values.isDone
+            })
+            .then(()=>navigate("/list"))
+        }else{
+            TodoDataSerive.updateTodo(name,myId,{
+                id:myId,
+                description:values.description,
+                targetDate:values.targetDate,
+                isDone:values.isDone
+            })
+            .then(()=>navigate("/list"))
+        }
+        
+
+    }
+
     componentDidMount(){
-        TodoDataSerive.findById(this.state.id)
+        console.log(this.props)
+        const params = this.props.myUseParams
+        const myId = params.id
+        if(myId===-1){
+            return
+        }
+        let name = sessionStorage.getItem("Username")
+        TodoDataSerive.findById(name,myId)
         .then(
             response=>
-                this.setState({
+                this.setState({ 
                 description:response.data.description,
                 targetDate:moment(response.data.targetDate).format('YYYY-MM-DD'),
                 isDone:response.data.isDone
@@ -55,25 +81,23 @@ class TodoComponent extends Component{
         return(
             <div>
                 <div className="container">
-                    <Formik initialValues={
-                        {
-                            id:this.state.id,
+                    <Formik 
+                    initialValues={ {
                             description:this.state.description,
                             targetDate:this.state.targetDate,
                             isDone:this.state.isDone
                         }}
-                        onSubmit={this.onSubmit}
                         validate={this.validate}
+                        onSubmit={this.onSubmit}
                         validateOnBlur={false}
                         validateOnChange={false}
-                        enableReinitialize={true}>
+                        // 修改数据以后能在页面展示，而不是显示原来的数据
+                        enableReinitialize={true}>   
                     
                         {(props)=>(
                             <Form>
                                 <ErrorMessage name="description" className="alert alert-warning" component="div"/>
                                 <ErrorMessage name="isDone" className="alert alert-warning" component="div"/>
-                                <label>id</label>
-                                <Field type='text' name='id' /><br/>
                                 <label>description</label>
                                 <Field type='text' name='description'/><br/>
                                 <label>targetDate</label>
@@ -90,4 +114,12 @@ class TodoComponent extends Component{
     }
 }
 
-export default TodoComponent
+function withMyHook(Component) {
+    return function WrappedComponent(props) {
+      const myNavigate = useNavigate();
+      const myUseParams = useParams();
+      return <Component {...props} myNavigate={myNavigate} myUseParams={myUseParams} />;
+    }
+}
+
+export default withMyHook(TodoComponent)

@@ -1,7 +1,6 @@
 import axios from "axios";
-import { Component } from "react/cjs/react.production.min";
 
-class TodoDataService extends Component{
+class TodoDataService {
     findAll(name){
         return axios.get(`http://localhost:8080/jpa/users/${name}/todos`)  
     }
@@ -18,7 +17,6 @@ class TodoDataService extends Component{
         return axios.put(`http://localhost:8080/jpa/users/${name}/todos/${id}`,todo)
     }
 
-    
     createTodo(name,todo){
         return axios.post(`http://localhost:8080/jpa/users/${name}/todos`,todo)
     }

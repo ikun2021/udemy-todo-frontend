@@ -10,7 +10,7 @@ class LoginComponent extends Component{
         super(props);
         this.state={
             username:'admin',   
-            password:'',
+            password:'123123',
             loginSuccess: false,
         }
         //如果方法在class中以箭函数的形式声明，则不需要bind this，因为箭函数会自动绑定this，调用时，还是要使用this.handleChange
@@ -53,22 +53,18 @@ class LoginComponent extends Component{
         )
     }
 
-    loginClicked(){
+    loginClicked(){ 
         const navigate = this.props.myHookValue
-        navigate(`/welcome/${this.state.username}`)
+        AuthenticationService.executeAuth(this.state.username,this.state.password)
+        .then(
+            (response)=>{
+                console.log(response);
+                AuthenticationService.registerWithToken(this.state.username,response.data.token);
+                navigate(`/welcome/${this.state.username}`)
+                
+            }
+        )
     }
-
-
-    // loginClicked(){ 
-    //     AuthenticationService.executeAuth(this.state.username,this.state.password)
-    //     .then(
-    //         (response)=>{
-    //             console.log(response);
-    //             AuthenticationService.registerWithToken(this.state.username,response.data.token);
-    //             this.props.history.push(`/welcome/${this.state.username}`)    //this.props.history.push
-    //         }
-    //     )
-    // }
 }
 
 function withMyHook(Component) {

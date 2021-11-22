@@ -12,6 +12,7 @@ class AuthenticationService {
     //sessionStorage在浏览器的application-local storage里面
     registerWithToken(username,token){
         let jwtToken = 'Bearer '+ token;
+        console.log(jwtToken);
         sessionStorage.setItem("Username",username);
         this.setAxiosInterceptors(jwtToken);
     }
