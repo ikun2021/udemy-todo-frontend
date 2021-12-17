@@ -23,7 +23,7 @@ class AuthenticationService {
 
     isLoggedIn(){
         let name = sessionStorage.getItem("Username")
-        // if(name===null) return false
+        if(name===null) return false
         return true
     }
 

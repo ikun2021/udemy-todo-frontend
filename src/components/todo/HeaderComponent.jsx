@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom'
 import AuthenticationService from './AuthenticationService.jsx';
 import { Link } from 'react-router-dom'
+
+
 class HeaderComponent extends Component {
+    
     render() {
-
         const isLoggedIn = AuthenticationService.isLoggedIn();
-
         return (
             <header>
                 <nav className="navbar navbar-expand-md bg-dark navbar-dark">

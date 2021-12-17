@@ -42,7 +42,7 @@ class TodoComponent extends Component{
             TodoDataSerive.createTodo(name,{
                 description:values.description,
                 targetDate:values.targetDate,
-                isDone:values.isDone
+                done:values.isDone
             })
             .then(()=>navigate("/list"))
         }else{
@@ -50,7 +50,7 @@ class TodoComponent extends Component{
                 id:myId,
                 description:values.description,
                 targetDate:values.targetDate,
-                isDone:values.isDone
+                done:values.isDone
             })
             .then(()=>navigate("/list"))
         }
